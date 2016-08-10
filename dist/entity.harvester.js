@@ -1,6 +1,6 @@
 const harvesterStates = require('states.harvester');
 const StateMachine = require('StateMachine');
-const harvesterConsntants = require('constants.harvester');
+const harvesterConstants = require('constants.harvester');
 
 class HarvesterEntity extends StateMachine {
   constructor (target, spawn, initialState = 'idling') {
@@ -51,10 +51,10 @@ class HarvesterEntity extends StateMachine {
   getDestination () {
     let destination;
     switch (this.target.memory.destination) {
-      case 'collect':
+      case harvesterConstants.COLLECT:
         destination = this.target.room.find(FIND_SOURCES)[0]; // refactor, average cpu cost
         break;
-      case 'transfer':
+      case harvesterConstants.TRANSFER:
         destination = this.spawn.target;
         break;
     }
