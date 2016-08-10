@@ -1,8 +1,10 @@
 const SpawnEntity = require('entity.spawn');
 const HarvesterEntity = require('entity.harvester');
+const UpgraderEntity = require('entity.upgrader');
 
 const entityTypes = {
-  harvester: HarvesterEntity
+  harvester: HarvesterEntity,
+  upgrader: UpgraderEntity
 };
 
 module.exports.loop = () => {

@@ -1,8 +1,8 @@
-const harvesterStates = {
+const upgraderStates = {
   idling: target => {
-    if (target.canCarryEnergy()) {
+    if (target.emptyEnergy()) {
       return 'collecting';
-    } else if (target.spawnNeedsEnergy()) {
+    } else {
       return 'delivering';
     }
   },
@@ -50,4 +50,4 @@ const harvesterStates = {
   }
 };
 
-module.exports = harvesterStates;
+module.exports = upgraderStates;

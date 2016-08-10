@@ -11,7 +11,8 @@ class SpawnEntity extends StateMachine {
 
   hasJob () {
     const harvesters = _.filter(Game.creeps, creep => creep.memory.type === 'harvester'); // refactor, hardcoded
-    return harvesters.length === 0; // refactor, this needs to be organized
+    const upgraders = _.filter(Game.creeps, creep => creep.memory.type === 'upgrader'); // refactor, hardcoded
+    return harvesters.length === 0 || upgraders.length === 0; // refactor, this needs to be organized
   }
 
   needsEnergy () {
@@ -35,7 +36,13 @@ class SpawnEntity extends StateMachine {
   }
 
   startBuilding () {
-    this.target.createCreep(defaultCreepBody, undefined, {type: 'harvester'}); // refactor, hardcoded
+    const harvesters = _.filter(Game.creeps, creep => creep.memory.type === 'harvester'); // refactor, hardcoded
+    const upgraders = _.filter(Game.creeps, creep => creep.memory.type === 'upgrader'); // refactor, hardcoded
+    if (harvesters.length === 0) {
+      this.target.createCreep(defaultCreepBody, undefined, {type: 'harvester'}); // refactor, hardcoded
+    } else if (upgraders.length === 0) {
+      this.target.createCreep(defaultCreepBody, undefined, {type: 'upgrader'}); // refactor, hardcoded
+    }
   }
 
   transfer (transferFn, resourceType) {
