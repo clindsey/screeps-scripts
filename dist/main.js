@@ -11,7 +11,7 @@ module.exports.loop = () => {
       delete Memory.creeps[creepName];
     }
   });
-  const spawnEntity = new SpawnEntity(Game.spawns['0-336-233-0']);
+  const spawnEntity = new SpawnEntity(Game.spawns['0-336-233-0']); // refactor, hardcoded
   spawnEntity.update();
   Object.keys(Game.creeps).forEach(creepName => {
     const creep = Game.creeps[creepName];

@@ -1,5 +1,6 @@
 const harvesterStates = require('states.harvester');
 const StateMachine = require('StateMachine');
+const harvesterConsntants = require('constants.harvester');
 
 class HarvesterEntity extends StateMachine {
   constructor (target, spawn, initialState = 'idling') {
@@ -21,7 +22,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   setDestinationTransfer () {
-    this.target.memory.destination = 'transfer';
+    this.target.memory.destination = harvesterConstants.TRANSFER;
   }
 
   inCollectRange () {
@@ -31,7 +32,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   setDestinationCollect () {
-    this.target.memory.destination = 'collect';
+    this.target.memory.destination = harvesterConstants.COLLECT;
   }
 
   harvest () {
