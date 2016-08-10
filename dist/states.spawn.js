@@ -1,6 +1,6 @@
 const spawnStates = {
   idling: target => {
-    if (target.hasJob() && !target.needsToCollect()) {
+    if (target.hasJob() && target.canWork() && target.enoughEnergyForJob()) {
       return spawnStates.building;
     }
   },
@@ -8,7 +8,6 @@ const spawnStates = {
   building: target => {
     if (!target.isBuilding()) {
       target.startBuilding()
-    } else {
       return spawnStates.idling;
     }
   }

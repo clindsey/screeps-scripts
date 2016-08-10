@@ -1,11 +1,18 @@
 const spawnStates = require('states.spawn');
-const fsm = require('fsm');
 const StateMachine = require('StateMachine');
 
 class SpawnEntity extends StateMachine {
+  constructor (target, initialState) {
+    super(target, spawnStates, initialState);
+  }
+
   hasJob () {
     const harvesters = _.filter(Game.creeps, creep => creep.memory.type === 'harvester');
-    return harvesters.length < 2;
+    return harvesters.length < 2; // refactor, this needs to be organized
+  }
+
+  canWork () {
+    return this.target.canCreateCreep([WORK, CARRY, MOVE]);
   }
 
   needsToCollect () {

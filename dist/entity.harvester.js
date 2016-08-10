@@ -1,10 +1,9 @@
 const harvesterStates = require('states.harvester');
-const fsm = require('fsm');
 const StateMachine = requie('StatemMachine');
 
 class HarvesterEntity extends StateMachine {
   constructor (target, spawn, initialState) {
-    super(target, intialState);
+    super(target, harvesterStates, intialState);
     this.spawn = spawn;
   }
 
@@ -17,7 +16,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   inTransferRange () {
-    const path = this.target.pos.findPathTo(this.spawn);
+    const path = this.target.pos.findPathTo(this.spawn); // refactor, high cpu cost
     return !path.length;
   }
 
@@ -26,8 +25,8 @@ class HarvesterEntity extends StateMachine {
   }
 
   inCollectRange () {
-    const sources = this.target.room.find(FIND_SOURCES);
-    const path = this.target.pos.findPathTo(sources[0]);
+    const sources = this.target.room.find(FIND_SOURCES); // refactor, average cpu cost
+    const path = this.target.pos.findPathTo(sources[0]); // refactor, high cpu cost
     return !path.length;
   }
 
@@ -36,7 +35,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   harvest () {
-    const sources = creep.room.find(FIND_SOURCES);
+    const sources = creep.room.find(FIND_SOURCES); // refactor, average cpu cost
     this.target.harvest(sources[0]);
   }
 
@@ -52,7 +51,7 @@ class HarvesterEntity extends StateMachine {
     let destination;
     switch (this.target.memory) {
       case 'collect':
-        destination = creep.room.find(FIND_SOURCES)[0];
+        destination = creep.room.find(FIND_SOURCES)[0]; // refactor, average cpu cost
         break;
       case 'transfer':
         destination = this.spawn;
@@ -63,12 +62,12 @@ class HarvesterEntity extends StateMachine {
 
   distanceToDestination () {
     const destination = getDestination();
-    return this.target.pos.findPathTo(destination).length;
+    return this.target.pos.findPathTo(destination).length; // refactor, high cpu cost
   }
 
   followNav () {
     const destination = getDestination();
-    const path = this.target.pos.findPathTo(destination);
+    const path = this.target.pos.findPathTo(destination); // refactor, high cpu cost
     this.target.move(path[0].direction);
   }
 }
