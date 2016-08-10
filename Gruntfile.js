@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-screeps');
+  console.log(process.env.SCREEPS_EMAIL);
   grunt.initConfig({
     screeps: {
       options: {

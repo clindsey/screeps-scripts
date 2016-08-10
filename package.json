@@ -4,12 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "screeps": "./node_modules/.bin/grunt screeps"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "grunt": "^1.0.1",
     "grunt-screeps": "^1.2.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "browser": true,
+      "es6": true
+    }
   }
 }
