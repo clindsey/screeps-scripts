@@ -1,10 +1,10 @@
-const upgraderStates = require('states.upgrader');
+const builderStates = require('states.upgrader');
 const StateMachine = require('StateMachine');
-const upgraderConstants = require('constants.upgrader');
+const builderConstants = require('constants.upgrader');
 
-class UpgraderEntity extends StateMachine {
+class BuilderEntity extends StateMachine {
   constructor (target, spawn, initialState = 'idling') {
-    super(target, upgraderStates, initialState);
+    super(target, builderStates, initialState);
     this.spawn = spawn;
   }
 
@@ -17,12 +17,13 @@ class UpgraderEntity extends StateMachine {
   }
 
   inTransferRange () {
-    const path = this.target.pos.findPathTo(this.target.room.controller); // refactor, high cpu cost
+    const constructionSites = this.target.room.find(FIND_CONSTRUCTION_SITES);
+    const path = this.target.pos.findPathTo(constructionSites[0]); // refactor, high cpu cost
     return path.length <= 1;
   }
 
   setDestinationTransfer () {
-    this.target.memory.destination = upgraderConstants.TRANSFERING;
+    this.target.memory.destination = builderConstants.TRANSFERING;
   }
 
   inCollectRange () {
@@ -32,7 +33,7 @@ class UpgraderEntity extends StateMachine {
   }
 
   setDestinationCollect () {
-    this.target.memory.destination = upgraderConstants.COLLECTING;
+    this.target.memory.destination = builderConstants.COLLECTING;
   }
 
   harvest () {
@@ -45,17 +46,19 @@ class UpgraderEntity extends StateMachine {
   }
 
   transfer () {
-    this.target.transfer(this.target.room.controller, RESOURCE_ENERGY);
+    const constructionSites = this.target.room.find(FIND_CONSTRUCTION_SITES);
+    this.target.build(constructionSites[0]);
   }
 
   getDestination () {
     let destination;
     switch (this.target.memory.destination) {
-      case upgraderConstants.COLLECTING:
+      case builderConstants.COLLECTING:
         destination = this.target.room.find(FIND_SOURCES)[1]; // refactor, average cpu cost
         break;
-      case upgraderConstants.TRANSFERING:
-        destination = this.target.room.controller;
+      case builderConstants.TRANSFERING:
+        const constructionSites = this.target.room.find(FIND_CONSTRUCTION_SITES);
+        destination = constructionSites[0];
         break;
     }
     return destination;
@@ -74,4 +77,4 @@ class UpgraderEntity extends StateMachine {
   }
 }
 
-module.exports = UpgraderEntity;
+module.exports = BuilderEntity;

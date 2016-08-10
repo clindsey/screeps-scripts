@@ -1,8 +1,10 @@
 const SpawnEntity = require('entity.spawn');
 const HarvesterEntity = require('entity.harvester');
 const UpgraderEntity = require('entity.upgrader');
+const BuilderEntity = require('entity.builder');
 
 const entityTypes = {
+  builder: BuilderEntity,
   harvester: HarvesterEntity,
   upgrader: UpgraderEntity
 };
@@ -13,7 +15,7 @@ module.exports.loop = () => {
       delete Memory.creeps[creepName];
     }
   });
-  const spawnEntity = new SpawnEntity(Game.spawns['0-336-233-0']); // refactor, hardcoded
+  const spawnEntity = new SpawnEntity(Game.spawns['0-335-034-0']); // refactor, hardcoded
   spawnEntity.update();
   Object.keys(Game.creeps).forEach(creepName => {
     const creep = Game.creeps[creepName];

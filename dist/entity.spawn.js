@@ -1,8 +1,11 @@
 const spawnStates = require('states.spawn');
 const StateMachine = require('StateMachine');
 
-const defaultCreepBody = [WORK, CARRY, MOVE];
-const baseEnergy = 200;
+const defaultCreepBody = [WORK, CARRY, MOVE, MOVE];
+const baseEnergy = 250;
+const harvesterPopulationSize = 2;
+const upgraderPopulationSize = 2;
+const builderPopulationSize = 1;
 
 class SpawnEntity extends StateMachine {
   constructor (target, initialState = 'idling') {
@@ -12,7 +15,8 @@ class SpawnEntity extends StateMachine {
   hasJob () {
     const harvesters = _.filter(Game.creeps, creep => creep.memory.type === 'harvester'); // refactor, hardcoded
     const upgraders = _.filter(Game.creeps, creep => creep.memory.type === 'upgrader'); // refactor, hardcoded
-    return harvesters.length === 0 || upgraders.length === 0; // refactor, this needs to be organized
+    const builders = _.filter(Game.creeps, creep => creep.memory.type === 'builder'); // refactor, hardcoded
+    return harvesters.length < harvesterPopulationSize || upgraders.length < upgraderPopulationSize || builders.length < builderPopulationSize; // refactor, this needs to be organized
   }
 
   needsEnergy () {
@@ -38,9 +42,12 @@ class SpawnEntity extends StateMachine {
   startBuilding () {
     const harvesters = _.filter(Game.creeps, creep => creep.memory.type === 'harvester'); // refactor, hardcoded
     const upgraders = _.filter(Game.creeps, creep => creep.memory.type === 'upgrader'); // refactor, hardcoded
-    if (harvesters.length === 0) {
+    const builders = _.filter(Game.creeps, creep => creep.memory.type === 'builder'); // refactor, hardcoded
+    if (harvesters.length < harvesterPopulationSize) {
       this.target.createCreep(defaultCreepBody, undefined, {type: 'harvester'}); // refactor, hardcoded
-    } else if (upgraders.length === 0) {
+    } else if (builders.length < builderPopulationSize) {
+      this.target.createCreep(defaultCreepBody, undefined, {type: 'builder'}); // refactor, hardcoded
+    } else if (upgraders.length < upgraderPopulationSize) {
       this.target.createCreep(defaultCreepBody, undefined, {type: 'upgrader'}); // refactor, hardcoded
     }
   }
