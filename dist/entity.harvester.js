@@ -13,11 +13,21 @@ class HarvesterEntity extends StateMachine {
   }
 
   spawnNeedsEnergy () {
-    return this.spawn.needsEnergy();
+    const structures = this.target.room.find(FIND_STRUCTURES, {
+      filter: structure => {
+        return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+      }
+    });
+    return !!structures.length;
   }
 
   inTransferRange () {
-    const path = this.target.pos.findPathTo(this.spawn.target); // refactor, high cpu cost
+    const structures = this.target.room.find(FIND_STRUCTURES, {
+      filter: structure => {
+        return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+      }
+    });
+    const path = this.target.pos.findPathTo(structures[0]); // refactor, high cpu cost
     return path.length <= 1;
   }
 
@@ -45,7 +55,12 @@ class HarvesterEntity extends StateMachine {
   }
 
   transfer () {
-    this.target.transfer(this.spawn.target, RESOURCE_ENERGY);
+    const structures = this.target.room.find(FIND_STRUCTURES, {
+      filter: structure => {
+        return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+      }
+    });
+    this.target.transfer(structures[0], RESOURCE_ENERGY);
   }
 
   getDestination () {
@@ -55,7 +70,12 @@ class HarvesterEntity extends StateMachine {
         destination = this.target.room.find(FIND_SOURCES)[0]; // refactor, average cpu cost
         break;
       case harvesterConstants.TRANSFERING:
-        destination = this.spawn.target;
+        const structures = this.target.room.find(FIND_STRUCTURES, {
+          filter: structure => {
+            return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+          }
+        });
+        destination = structures[0];
         break;
     }
     return destination;

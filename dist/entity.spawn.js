@@ -5,7 +5,7 @@ const defaultCreepBody = [WORK, CARRY, MOVE, MOVE];
 const baseEnergy = 250;
 const harvesterPopulationSize = 2;
 const upgraderPopulationSize = 2;
-const builderPopulationSize = 1;
+const builderPopulationSize = 2;
 
 class SpawnEntity extends StateMachine {
   constructor (target, initialState = 'idling') {
