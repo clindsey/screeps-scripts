@@ -1,52 +1,71 @@
 const harvesterStates = {
   idling: target => {
+    console.log('harvester', target.target.name, 'idling', 'enter');
+    target.clearState();
     if (target.canCarryEnergy()) {
-      return harvesterStates.collecting;
+      console.log('harvester', target.target.name, 'idling', 'can carry energy');
+      return 'collecting';
     } else if (target.spawnNeedsEnergy()) {
-      return harvesterStates.delivering;
+      console.log('harvester', target.target.name, 'idling', 'spawn needs energy');
+      return 'delivering';
     }
   },
 
   delivering: target => {
+    console.log('harvester', target.target.name, 'delivering', 'enter');
     if (target.inTransferRange()) {
-      return harvesterStates.transfering;
+      console.log('harvester', target.target.name, 'delivering', 'in transfer range');
+      return 'transfering';
     } else {
       target.setDestinationTransfer();
-      return harvesterStates.navigating;
+      console.log('harvester', target.target.name, 'delivering', 'need to transfer');
+      return 'navigating';
     }
   },
 
   collecting: target => {
+    console.log('harvester', target.target.name, 'collecting', 'enter', target.inCollectRange());
     if (target.inCollectRange()) {
-      return harvesterStates.harvesting;
+      console.log('harvester', target.target.name, 'collecting', 'in collect range');
+      return 'harvesting';
     } else {
       target.setDestinationCollect();
-      return harvesterStates.navigating;
+      console.log('harvester', target.target.name, 'collecting', 'need to collect');
+      return 'navigating';
     }
   },
 
   harvesting: target => {
+    console.log('harvester', target.target.name, 'harvesting', 'enter');
     if (target.canCarryEnergy()) {
+      console.log('harvester', target.target.name, 'harvesting', 'can carry energy');
       target.harvest();
     } else {
-      return harvesterStates.idling;
+      console.log('harvester', target.target.name, 'harvesting', 'cant carry energy');
+      return 'idling';
     }
   },
 
   transfering: target => {
-    if (traget.needsToTransfer()) {
+    console.log('harvester', target.target.name, 'transfering', 'enter');
+    if (target.needsToTransfer()) {
+      console.log('harvester', target.target.name, 'transfering', 'transfering');
       target.transfer();
     } else {
-      return harvesterStates.idling;
+      console.log('harvester', target.target.name, 'transfering', 'done with transfer');
+      return 'idling';
     }
   },
 
-  navigating: (target, machine) => {
-    if (target.distanceToDestination()) {
+  navigating: target => {
+    console.log('harvester', target.target.name, 'navigating', 'enter');
+    if (target.distanceToDestination() > 1) {
+      console.log('harvester', target.target.name, 'navigating', 'following nav');
       target.followNav();
       return;
     }
-    machine.shift();
+    console.log('harvester', target.target.name, 'navigating', 'arrived');
+    target.shiftState();
   }
 };
 

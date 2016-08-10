@@ -8,7 +8,16 @@ class StateMachine {
   }
 
   update () {
-    this.target.memory.states = this.states = fsm.update(this);
+    this.target.memory.states = this.states = fsm.update(this, this.stateFns);
+  }
+
+  clearState () {
+    this.target.memory.states = this.states = ['idling'];
+  }
+
+  shiftState () {
+    this.states.shift();
+    this.target.memory.states = this.states;
   }
 }
 

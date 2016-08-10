@@ -1,9 +1,9 @@
 const harvesterStates = require('states.harvester');
-const StateMachine = requie('StatemMachine');
+const StateMachine = require('StateMachine');
 
 class HarvesterEntity extends StateMachine {
-  constructor (target, spawn, initialState) {
-    super(target, harvesterStates, intialState);
+  constructor (target, spawn, initialState = 'idling') {
+    super(target, harvesterStates, initialState);
     this.spawn = spawn;
   }
 
@@ -16,8 +16,8 @@ class HarvesterEntity extends StateMachine {
   }
 
   inTransferRange () {
-    const path = this.target.pos.findPathTo(this.spawn); // refactor, high cpu cost
-    return !path.length;
+    const path = this.target.pos.findPathTo(this.spawn.target); // refactor, high cpu cost
+    return path.length <= 1;
   }
 
   setDestinationTransfer () {
@@ -27,7 +27,7 @@ class HarvesterEntity extends StateMachine {
   inCollectRange () {
     const sources = this.target.room.find(FIND_SOURCES); // refactor, average cpu cost
     const path = this.target.pos.findPathTo(sources[0]); // refactor, high cpu cost
-    return !path.length;
+    return path.length <= 1;
   }
 
   setDestinationCollect () {
@@ -35,7 +35,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   harvest () {
-    const sources = creep.room.find(FIND_SOURCES); // refactor, average cpu cost
+    const sources = this.target.room.find(FIND_SOURCES); // refactor, average cpu cost
     this.target.harvest(sources[0]);
   }
 
@@ -44,30 +44,32 @@ class HarvesterEntity extends StateMachine {
   }
 
   transfer () {
-    this.spawn.transfer(this.target.transfer, RESOURCE_ENERGY);
+    this.target.transfer(this.spawn.target, RESOURCE_ENERGY);
   }
 
   getDestination () {
     let destination;
-    switch (this.target.memory) {
+    switch (this.target.memory.destination) {
       case 'collect':
-        destination = creep.room.find(FIND_SOURCES)[0]; // refactor, average cpu cost
+        destination = this.target.room.find(FIND_SOURCES)[0]; // refactor, average cpu cost
         break;
       case 'transfer':
-        destination = this.spawn;
+        destination = this.spawn.target;
         break;
     }
     return destination;
   }
 
   distanceToDestination () {
-    const destination = getDestination();
+    const destination = this.getDestination();
     return this.target.pos.findPathTo(destination).length; // refactor, high cpu cost
   }
 
   followNav () {
-    const destination = getDestination();
+    const destination = this.getDestination();
     const path = this.target.pos.findPathTo(destination); // refactor, high cpu cost
     this.target.move(path[0].direction);
   }
 }
+
+module.exports = HarvesterEntity;

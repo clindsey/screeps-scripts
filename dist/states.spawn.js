@@ -1,14 +1,15 @@
 const spawnStates = {
   idling: target => {
+    target.clearState();
     if (target.hasJob() && target.canWork() && target.enoughEnergyForJob()) {
-      return spawnStates.building;
+      return 'building';
     }
   },
 
   building: target => {
     if (!target.isBuilding()) {
       target.startBuilding()
-      return spawnStates.idling;
+      return 'idling';
     }
   }
 };
