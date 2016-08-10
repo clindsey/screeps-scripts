@@ -6,10 +6,9 @@ const spawnStates = {
   },
 
   building: target => {
-    if (!target.startedBuilding()) {
+    if (!target.isBuilding()) {
       target.startBuilding()
-    } else if (!target.stillBuilding()) {
-      target.doneBuilding();
+    } else {
       return spawnStates.idling;
     }
   }

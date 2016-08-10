@@ -1,5 +1,5 @@
 class StateMachine {
-  constructor (target, initialState) {
+  constructor (target, initialState = 'idling') {
     this.target = target;
     this.states = target.memory.states || [initialState];
   }

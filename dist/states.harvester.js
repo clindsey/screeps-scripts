@@ -11,7 +11,7 @@ const harvesterStates = {
     if (target.inTransferRange()) {
       return harvesterStates.transfering;
     } else {
-      target.setDestinationSpawn();
+      target.setDestinationTransfer();
       return harvesterStates.navigating;
     }
   },
@@ -20,7 +20,7 @@ const harvesterStates = {
     if (target.inCollectRange()) {
       return harvesterStates.harvesting;
     } else {
-      target.setDestinationEnergy();
+      target.setDestinationCollect();
       return harvesterStates.navigating;
     }
   },
