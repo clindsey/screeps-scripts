@@ -22,7 +22,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   setDestinationTransfer () {
-    this.target.memory.destination = harvesterConstants.TRANSFER;
+    this.target.memory.destination = harvesterConstants.TRANSFERING;
   }
 
   inCollectRange () {
@@ -32,7 +32,7 @@ class HarvesterEntity extends StateMachine {
   }
 
   setDestinationCollect () {
-    this.target.memory.destination = harvesterConstants.COLLECT;
+    this.target.memory.destination = harvesterConstants.COLLECTING;
   }
 
   harvest () {
@@ -51,10 +51,10 @@ class HarvesterEntity extends StateMachine {
   getDestination () {
     let destination;
     switch (this.target.memory.destination) {
-      case harvesterConstants.COLLECT:
+      case harvesterConstants.COLLECTING:
         destination = this.target.room.find(FIND_SOURCES)[0]; // refactor, average cpu cost
         break;
-      case harvesterConstants.TRANSFER:
+      case harvesterConstants.TRANSFERING:
         destination = this.spawn.target;
         break;
     }
@@ -63,7 +63,8 @@ class HarvesterEntity extends StateMachine {
 
   distanceToDestination () {
     const destination = this.getDestination();
-    return this.target.pos.findPathTo(destination).length; // refactor, high cpu cost
+    const dist = this.target.pos.findPathTo(destination).length; // refactor, high cpu cost
+    return dist;
   }
 
   followNav () {

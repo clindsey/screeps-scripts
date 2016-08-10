@@ -5,18 +5,12 @@ const fsm = {
 
   update: (target, stateFns) => {
     const args = Array.prototype.slice.call(arguments, 0);
-    args.unshift(target, target.states);
-    const targetStates = target.states.slice(0);
-    const targetState = targetStates[0];
-    const newState = stateFns[targetState].apply(stateFns[targetState], args);
+    args.unshift(target);
+    const newState = stateFns[target.target.memory.state].apply(stateFns[target.target.memory.state], args);
     if (newState) {
-      fsm.unshift(targetStates, newState);
+      target.target.memory.state = newState;
     }
-    return targetStates;
-  },
-
-  unshift: (states, newState) => {
-    states.unshift(newState);
+    return target.target.memory.state;
   }
 };
 

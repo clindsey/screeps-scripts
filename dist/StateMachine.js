@@ -6,20 +6,11 @@ class StateMachine {
   constructor (target, stateFns, initialState = defaultInitialState) {
     this.target = target;
     this.stateFns = stateFns;
-    this.states = target.memory.states || [initialState];
+    this.target.memory.state = this.target.memory.state || initialState;
   }
 
   update () {
-    this.target.memory.states = this.states = fsm.update(this, this.stateFns);
-  }
-
-  clearState () {
-    this.target.memory.states = this.states = [defaultInitialState];
-  }
-
-  shiftState () {
-    this.states.shift();
-    this.target.memory.states = this.states;
+    fsm.update(this, this.stateFns);
   }
 }
 
