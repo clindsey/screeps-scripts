@@ -1,5 +1,5 @@
 module.exports = {
-  run: (creep) => {
+  run: creep => {
     console.log('creep running', creep);
   }
 };

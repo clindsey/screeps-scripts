@@ -1,9 +1,8 @@
-const utils = require('utils');
+const SpawnEntity = require('entity.spawn');
 
 module.exports.loop = () => {
-  const {creeps} = Game;
-  console.log('testing', utils.test());
-  Object.keys(creeps).forEach((creepName) => {
-    const creep = creeps[creepName];
+  Object.keys(Game.spawns).forEach((spawnName) => {
+    const spawnEntity = new SpawnEntity(Game.spawns[spawnName], 'idling');
+    spawnEntity.update();
   });
 };
