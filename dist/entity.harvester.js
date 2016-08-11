@@ -27,6 +27,9 @@ class HarvesterEntity extends StateMachine {
         return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
       }
     });
+    if (!structures[0]) {
+      return;
+    }
     const path = this.target.pos.findPathTo(structures[0]); // refactor, high cpu cost
     return path.length <= 1;
   }
@@ -83,12 +86,18 @@ class HarvesterEntity extends StateMachine {
 
   distanceToDestination () {
     const destination = this.getDestination();
+    if (!destination) {
+      return;
+    }
     const dist = this.target.pos.findPathTo(destination).length; // refactor, high cpu cost
     return dist;
   }
 
   followNav () {
     const destination = this.getDestination();
+    if (!destination) {
+      return;
+    }
     const path = this.target.pos.findPathTo(destination); // refactor, high cpu cost
     this.target.move(path[0].direction);
   }

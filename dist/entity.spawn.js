@@ -1,8 +1,8 @@
 const spawnStates = require('states.spawn');
 const StateMachine = require('StateMachine');
 
-const defaultCreepBody = [WORK, CARRY, MOVE, MOVE];
-const baseEnergy = 250;
+const defaultCreepBody = [WORK, WORK, CARRY, MOVE, MOVE];
+const baseEnergy = 350;
 const harvesterPopulationSize = 2;
 const upgraderPopulationSize = 2;
 const builderPopulationSize = 2;
@@ -10,6 +10,15 @@ const builderPopulationSize = 2;
 class SpawnEntity extends StateMachine {
   constructor (target, initialState = 'idling') {
     super(target, spawnStates, initialState);
+  }
+
+  calculateEnergy () {
+    const structures = this.target.room.find(FIND_STRUCTURES, {
+      filter: structure => {
+        return structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN;
+      }
+    });
+    return structures.map(({energy}) => energy).reduce((p, c) => p + c, 0);
   }
 
   hasJob () {
@@ -20,7 +29,7 @@ class SpawnEntity extends StateMachine {
   }
 
   needsEnergy () {
-    return this.target.energy < this.target.energyCapacity;
+    return this.calculateEnergy() < this.target.energyCapacity;
   }
 
   canWork () {
@@ -28,11 +37,11 @@ class SpawnEntity extends StateMachine {
   }
 
   needsToCollect () {
-    return this.target.energy < baseEnergy;;
+    return this.calculateEnergy() < baseEnergy;
   }
 
   enoughEnergyForJob () {
-    return this.target.energy >= baseEnergy;
+    return this.calculateEnergy() >= baseEnergy;
   }
 
   isBuilding () {
